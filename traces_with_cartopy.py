@@ -12,7 +12,6 @@ import os
 import math
 import time
 
-#printingexcess = bool(True)
 
 dataslist=dict()
 
@@ -25,7 +24,7 @@ from get_elevation import dataslist, elevationfromcoordinate
 
 
 
-#rename because it uses a normal formula at this point
+#use an actual formula for angular distance instead
 def cartesianfromgeo(declat, declon):
 	phi = math.radians(declat)
 	sig = math.radians(declon)
@@ -71,18 +70,14 @@ def midpointcircle(f,in_azimuth,declat1,declon1,declat2,declon2):
 
 
 
-#unneeded function
 def sec_isosceles(n,k, alpha):
 	beta = (180-alpha)/2
 	return k*math.sin(math.radians(beta))/math.sin(math.radians(180-beta-n*alpha))
 
 
-#def sec_diffsides(n,alpha, j,k,g):
 def sec_diffsides(n,alpha, k, j, g, cosbeta):
 
 	if (g==0):
-		#can implement to a function
-		#g=math.sqrt(math.pow(j,2)+math.pow(k,2)-2*j*k*math.cos(math.radians(alpha)))	
 		g=gcalc(k,j, alpha)
 
 	if(printingexcess): print(f"beta {math.degrees(math.acos(cosbeta))}")
@@ -100,9 +95,6 @@ def sec_diffsides(n,alpha, k, j, g, cosbeta):
 def gcalc(k,j, alpha):
 	return math.sqrt(math.pow(j,2)+math.pow(k,2)-2*j*k*math.cos(math.radians(alpha)))	
 
-
-
-#proportions acting really weird on smaller areas fsr
 
 
 
