@@ -232,14 +232,6 @@ def tracebetweentwo(coords1, coords2, **kwargsdata):
 	
 
 
-	#print()
-	#print()
-	#print(len(lineheightinglist))
-
-
-
-	#plt.show() ##- slows down
-
 	return is_visible
 
 
@@ -248,10 +240,9 @@ def tracebetweentwo(coords1, coords2, **kwargsdata):
 
 reqkeys_calculateareainfos = []
 def calculateareainfos(display_map, mast_dec_coord,start_coord,lenghts, **kwargsdata):
-	#print(type(kwargsdata))
+
 
 	requiredvalues = ["transmr_heightrel"]		
-	#defaultablevalues = {"display_map":True,"write_process_logs":True,"gatherprecisionstep":0.05, "trace_checks_per_one_degree":500, "maxtransmissiondist":0, "logpercentageprecision":5, "receiver_heightrel":2}
 	defaultablevalues = {"write_process_logs":True,"gatherprecisionstep":0.05, "trace_checks_per_one_degree":500, "maxtransmissiondist":0, "logpercentageprecision":5, "receiver_heightrel":2}
 
 
@@ -259,18 +250,16 @@ def calculateareainfos(display_map, mast_dec_coord,start_coord,lenghts, **kwargs
 		if (not dfkey in kwargsdata.keys()):
 			kwargsdata[dfkey] = defaultablevalues[dfkey] 
 
-	###	print(kwargsdata)
+
 
 	for rqkey in requiredvalues:
 		assert (rqkey in kwargsdata.keys()),f'Missing key {rqkey}'
-		#if (not rqkey in kwargsdata.keys()):
-			#raise TypeError(f'Missing key {rqkey}') 
+
 
 
 	if(kwargsdata["write_process_logs"]):
 		logpercentageprecision = 5
 		reachedpercentages=[]
-	#print(auxinfo)
 
 	
 
@@ -290,19 +279,7 @@ def calculateareainfos(display_map, mast_dec_coord,start_coord,lenghts, **kwargs
 		ax1.set_extent([min(start_coord[1],mast_dec_coord[1])-0.2,max(start_coord[1]+lenghts[1],mast_dec_coord[1])+0.2, min(start_coord[0],mast_dec_coord[0])-0.2,max(start_coord[0]+lenghts[0],mast_dec_coord[0])+0.2], crs=ccrs.PlateCarree())
 
 		
-		
-		extrs = [[90,-90],[180,-180]]
 
-	#unneeded here
-	def refreshextrs(ex_lat,ex_lon):
-		iex = 0
-		while iex<=1:
-			eex = 0
-			while eex <=1:
-				if bool(eex) != (coord_vls[iex]<extrs[iex][eex]):
-					extrs[iex][eex] = coord_vls[iex]
-				eex+=1
-			iex+=1
 
 
 
@@ -318,12 +295,7 @@ def calculateareainfos(display_map, mast_dec_coord,start_coord,lenghts, **kwargs
 	noncovered_tiles_marine=0
 
 	gathers_projected= (int(lenghts[0]/kwargsdata["gatherprecisionstep"])+1)*(int(lenghts[1]/kwargsdata["gatherprecisionstep"])+1)
-	#print(projgathers)
-	#print(int(lalength/gatherprecisionstep)+1)
-	#print(int(lolength/gatherprecisionstep)+1)
-	#print((int(lalength/gatherprecisionstep)+1)*(int(lolength/gatherprecisionstep)+1))
 	gathers=0
-
 
 	if(kwargsdata["write_process_logs"]):
 		starttime = time.time()
@@ -333,13 +305,6 @@ def calculateareainfos(display_map, mast_dec_coord,start_coord,lenghts, **kwargs
 
 		loi = start_coord[1]
 		while (round(loi,3)<=start_coord[1]+lenghts[1]):
-			#if(lai == lastart): print(loi)
-			#print(f"{lai} {loi}")
-
-			#lat_full= basis_lat+lai
-			#lon_full= basis_lon+loi
-
-			#res_trace = tracebetweentwo((calcazimuth(True,mast_dec_lat, mast_dec_lon, lai, loi)),  lai, loi,2, mast_dec_lat, mast_dec_lon, 250)
 			res_trace = tracebetweentwo(coords1 = [lai, loi, kwargsdata["receiver_heightrel"]],coords2 =  [mast_dec_coord[0], mast_dec_coord[1], kwargsdata["transmr_heightrel"]], trace_precision = kwargsdata["trace_checks_per_one_degree"], maxdist = kwargsdata["maxtransmissiondist"])
 			if(res_trace==False):
 				noncovered_tiles_total+=1
@@ -377,8 +342,6 @@ def calculateareainfos(display_map, mast_dec_coord,start_coord,lenghts, **kwargs
 
 
 
-	#print(f"found {covered_tiles} covered points on land and {noncovered_tiles} non-covered points on land.")
-	#print(f"coverage equals {covered_tiles/(noncovered_tiles+covered_tiles)}")
 
 	if(kwargsdata["write_process_logs"]):
 		endtime = time.time();
@@ -389,11 +352,6 @@ def calculateareainfos(display_map, mast_dec_coord,start_coord,lenghts, **kwargs
 		ax1.plot(mast_dec_coord[1],mast_dec_coord[0], 'o', color="green",markersize=2, transform=ccrs.PlateCarree())
 		plt.show()
 
-	#if(display_map==True): ax1.plot(mast_dec_coord[1],mast_dec_coord[0], 'o', color="green",markersize=2, transform=ccrs.PlateCarree())	
-	#
-	#if(display_map==True): plt.show()
-
-	#should shorten
 	if(noncovered_tiles_total+covered_tiles_total!=0):
 		coveragetotal = covered_tiles_total/(noncovered_tiles_total+covered_tiles_total)
 	else:
@@ -425,12 +383,5 @@ def calculateareainfos(display_map, mast_dec_coord,start_coord,lenghts, **kwargs
 
 
 if __name__=="__main__":
-	##print(calculateareainfos(True, [43.1225,131.899444],[42,131],[1.5,2], maxdist = 30000,  transmr_heightrel=187, receiver_heightrel=52, gatherprecisionstep = 0.05, trace_checks_per_one_degree = 250, write_process_logs = True))
-	#print(calculateareainfos(True, [43.1225,131.899444],[42,131],[1.5,2], maxdist = 30000, transmr_heightrel=187, receiver_heightrel=52, gatherprecisionstep = 0.05, trace_checks_per_one_degree = 250, write_process_logs = True))
-		###print(dataslist.keys())
-	
-	#i = 2050
-	#while i <= 3000:
-	#		print(calculateareainfos(False, [43.1225,131.899444],[42,131],[1.5,2], maxdist = 30000,  transmr_heightrel=187, receiver_heightrel=52, gatherprecisionstep = 0.05, trace_checks_per_one_degree = i, write_process_logs = False)["total_covered_tiles"])
-	#		i+=50
+	#print(calculateareainfos(True, [43.1225,131.899444],[42,131],[1.5,2], maxdist = 30000,  transmr_heightrel=187, receiver_heightrel=52, gatherprecisionstep = 0.05, trace_checks_per_one_degree = 250, write_process_logs = True))
 	pass
