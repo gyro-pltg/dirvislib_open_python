@@ -170,7 +170,7 @@ def tracebetweentwo(coords1, coords2, **kwargsdata):
 	cosbeta_pre = (math.pow(spacedist,2)+math.pow(k_pre,2)-math.pow(j_pre,2))/(2*k_pre*spacedist)
 
 
-	#comment to be deleted soon
+	#comment to be deleted in some commits
 
 	i = 0
 	while (i<=1):
