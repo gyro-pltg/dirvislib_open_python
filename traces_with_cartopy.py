@@ -377,5 +377,6 @@ def calculateareainfos(display_map, mast_dec_coord,start_coord,lenghts, **kwargs
 
 
 if __name__=="__main__":
-	#print(calculateareainfos(True, [43.1225,131.899444],[42,131],[1.5,2], maxdist = 30000,  transmr_heightrel=187, receiver_heightrel=52, gatherprecisionstep = 0.05, trace_checks_per_one_degree = 250, write_process_logs = True))
+	#print(calculateareainfos(True, [43.1225,131.899444],[42,131],[1.5,2], maxdist = 30000,  transmr_heightrel=187, receiver_heightrel=52, gatherprecisionstep = 0.03, trace_checks_per_one_degree = 250, write_process_logs = True))
+	#print(dataslist.keys())
 	pass

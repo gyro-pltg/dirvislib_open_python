@@ -12,27 +12,31 @@ import os
 dataslist=dict()
 
 
+def gettopofilenamebase(latdegree,londegree):
+	return f"{"N" if (latdegree>0) else "S"}{abs(latdegree)}{"E" if (londegree>0) else "W"}{abs(londegree)}"
+
+
 def open_degree(latdegree,londegree):
 	#print(__name__)
-	if (f"N{latdegree}E{londegree}" in dataslist.keys()):
+	if (gettopofilenamebase(latdegree,londegree) in dataslist.keys()):
 		###if (__name__=="__main__"): print("file was previously opened and converted already")
 		pass
 	else:
-		if(f"N{latdegree}E{londegree}.hgt" in os.listdir("./SRTM_unpackedfull/")):
-			with open(f"./SRTM_unpackedfull/N{latdegree}E{londegree}.hgt", 'rb') as elevatnfile:
+		if(f"{gettopofilenamebase(latdegree,londegree)}.hgt" in os.listdir("./SRTM_unpackedfull/")):
+			with open(f"./SRTM_unpackedfull/{gettopofilenamebase(latdegree,londegree)}.hgt", 'rb') as elevatnfile:
 				fileconts=elevatnfile.read()
 			###if (__name__=="__main__"): print(len(fileconts))
 			filecontstrue = struct.unpack(f">{('h' * ((len(fileconts)) // 2))}", fileconts)
-			dataslist[f"N{latdegree}E{londegree}"]=filecontstrue
+			dataslist[gettopofilenamebase(latdegree,londegree)]=filecontstrue
 		else:
-			dataslist[f"N{latdegree}E{londegree}"]=[0]*1201*1201
+			dataslist[gettopofilenamebase(latdegree,londegree)]=[0]*1201*1201
 
 
 												#must reorder or even restructurize the coordinate arguments
-def elevationfromcoordinate(displaymap, coordmode, basisN, basisE, *coo, **kwrgarr):
-	open_degree(basisN,basisE)
+def elevationfromcoordinate(displaymap, coordmode, basis_lat, basis_lon, *coo, **kwrgarr):
+	open_degree(basis_lat,basis_lon)
 	
-	
+	#unused now
 	if(coordmode=="minsecond"):
 		#can even make deeper functions
 		latoffbase=1200-int(round((coo[0]*60+coo[1])/3,0)) #also patch
@@ -48,7 +52,7 @@ def elevationfromcoordinate(displaymap, coordmode, basisN, basisE, *coo, **kwrga
 	##if (__name__=="__main__"): print(latoffbase*1201 + lonoffbase)
 	#retvalue1 = filecontstrue[(int(((60-minAT)*60+(60-secAT))/3))*1201 + (int((minON*60+secON)/3))] - also try to make this option work just for fun
 	#retvalue1 = filecontstrue[(1201-(int((minAT*60+secAT)//3)))*1201 + (int((minON*60+secON)//3))]
-	retvalue1 = dataslist[f"N{basisN}E{basisE}"][latoffbase*1201 + lonoffbase]
+	retvalue1 = dataslist[gettopofilenamebase(basis_lat,basis_lon)][latoffbase*1201 + lonoffbase]
 	#why tf did (retvalue1 = filecontstrue[(minAT*60+int(secAT*3))*1201 + minON*60+int(secON*3)]) even work
 
 	###if (__name__=="__main__"): print(f"elevation {retvalue1} m")
@@ -74,13 +78,13 @@ def elevationfromcoordinate(displaymap, coordmode, basisN, basisE, *coo, **kwrga
 			while(lonoffset<1201):
 				#try:
 				if (True):
-					ht=dataslist[f"N{basisN}E{basisE}"][latoffset*1201 + lonoffset]
+					ht=dataslist[gettopofilenamebase(basis_lat,basis_lon)][latoffset*1201 + lonoffset]
 				#except Exception as e:
 				#	print(e)
 				#	print(latoffset*1201 + lonoffset)
 				#if(ht==retvalue1):
 				if(latoffset==latoffbase and lonoffset==lonoffbase):
-					ax1.plot(basisE+(lonoffset/1201), (1+basisN)-(latoffset/1201), 'o', color="red",markersize=5, transform=ccrs.PlateCarree())
+					ax1.plot(basis_lon+(lonoffset/1201), (1+basis_lat)-(latoffset/1201), 'o', color="red",markersize=5, transform=ccrs.PlateCarree())
 					pass
 		
 				lonoffset+=1
@@ -90,8 +94,8 @@ def elevationfromcoordinate(displaymap, coordmode, basisN, basisE, *coo, **kwrga
 		#maybe try to make it work just for fun idk
 		#ax1.plot(131+(((minAT*60+int(secAT/3))*1201 + minON*60+int(secON/3))%1201)/1201, 44-(((minAT*60+int(secAT/3))*1201 + minON*60+int(secON/3))//1201)/1201, 'o', color="red",markersize=5, transform=ccrs.PlateCarree())
 
-		if(coordmode=="minsecond"): ax1.plot(basisE+coo[2]/60+coo[3]/3600,basisN+coo[0]/60+coo[1]/3600, 'P', color="pink",markersize=3, transform=ccrs.PlateCarree())
-		if (coordmode=="decimal"): ax1.plot(basisE+coo[1],basisN+coo[0], 'P', color="pink",markersize=3, transform=ccrs.PlateCarree())
+		if(coordmode=="minsecond"): ax1.plot(basis_lon+coo[2]/60+coo[3]/3600,basisN+coo[0]/60+coo[1]/3600, 'P', color="pink",markersize=3, transform=ccrs.PlateCarree())
+		if (coordmode=="decimal"): ax1.plot(basis_lon+coo[1],basisN+coo[0], 'P', color="pink",markersize=3, transform=ccrs.PlateCarree())
 		plt.show()
 	
 	return retvalue1
