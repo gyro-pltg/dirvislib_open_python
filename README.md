@@ -4,5 +4,3 @@ These functions use a calculation method that utilizes both earth curvature and 
 
 Please note that so far this library is meant for estimation uses and hobby projects rather than the professional use. As for early March 2026, the aforementioned calculation method doesn't imply complex factors like fresnel zones or terrain signal reflections, and the functions themselves imply that the possibility to receive signal from one point on Earth to other is a binary value determined by presence of obstructions on its path. 
 Please also note that as for 2026-03-14, work with coordinates outside of the positive geographical coordinate value scopes (0-90 N, 0-180 E) has been implemented but has not yet been tested, but everyone is welcome to volunteer in helping with it!
-
-Credits to Chris Veness' (Movable Type Scripts) works for helping with some of the geographic calculation formulas.
